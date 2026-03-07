@@ -247,7 +247,7 @@ function serveFile(req, res, pathname) {
 
 setInterval(cleanupRooms, 60_000);
 
-const server = http.createServer(async (req, res) => {
+async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
 
@@ -351,8 +351,15 @@ const server = http.createServer(async (req, res) => {
   } catch (error) {
     json(res, 400, { error: error.message || "Request failed" });
   }
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`Snakes and Ladders server listening on http://localhost:${PORT}`);
-});
+// Vercel serverless export
+module.exports = handler;
+
+// Local development: start HTTP server
+if (require.main === module) {
+  const server = http.createServer(handler);
+  server.listen(PORT, () => {
+    console.log(`Snakes and Ladders server listening on http://localhost:${PORT}`);
+  });
+}

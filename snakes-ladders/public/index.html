@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snakes and Ladders Online</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Remote Board Game</p>
+          <h1>Snakes and Ladders for up to 3 players</h1>
+          <p class="subhead">
+            Create a room, share the link, and take turns from different devices.
+          </p>
+        </div>
+        <div class="hero-card">
+          <form id="auth-form" class="panel">
+            <label for="player-name">Your name</label>
+            <input id="player-name" name="name" type="text" maxlength="20" placeholder="Player 1" required />
+            <div class="actions">
+              <button type="submit" data-mode="create">Create room</button>
+              <button type="button" id="join-room-button" class="secondary">Join room</button>
+            </div>
+            <div id="join-fields" class="join-fields hidden">
+              <label for="room-id">Room code</label>
+              <input id="room-id" name="roomId" type="text" maxlength="6" placeholder="ABC123" />
+              <button type="button" id="join-submit" class="accent">Join with code</button>
+            </div>
+            <p id="auth-error" class="error" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section id="game" class="game hidden">
+        <aside class="sidebar">
+          <div class="panel">
+            <p class="eyebrow">Room</p>
+            <h2 id="room-label">------</h2>
+            <p class="muted">Share this link:</p>
+            <div class="share-row">
+              <input id="share-link" readonly />
+              <button id="copy-link" class="secondary">Copy</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <p class="eyebrow">Players</p>
+            <ul id="player-list" class="player-list"></ul>
+          </div>
+
+          <div class="panel controls">
+            <p class="eyebrow">Turn</p>
+            <h2 id="turn-label">Waiting...</h2>
+            <button id="roll-button" class="accent" disabled>Roll dice</button>
+            <p id="roll-result" class="dice-result">Roll pending</p>
+          </div>
+
+          <div class="panel">
+            <p class="eyebrow">Game log</p>
+            <ul id="game-log" class="game-log"></ul>
+          </div>
+        </aside>
+
+        <section class="board-panel panel">
+          <div id="board" class="board"></div>
+        </section>
+      </section>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

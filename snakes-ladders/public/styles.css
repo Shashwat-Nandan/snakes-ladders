@@ -1,0 +1,264 @@
+:root {
+  --bg: #f5efe2;
+  --panel: rgba(255, 252, 245, 0.92);
+  --ink: #1c1b18;
+  --muted: #655f54;
+  --line: #c6baa2;
+  --accent: #c24d2c;
+  --accent-dark: #7b2712;
+  --gold: #f0c25b;
+  --green: #2f7a45;
+  --red: #8d2c32;
+  --shadow: 0 18px 60px rgba(56, 42, 23, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(240, 194, 91, 0.45), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(194, 77, 44, 0.18), transparent 30%),
+    linear-gradient(135deg, #efe5cf 0%, #f8f5ee 100%);
+  font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-shell {
+  width: min(1200px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.hero {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: center;
+  min-height: 36vh;
+}
+
+.hero-copy h1 {
+  margin: 8px 0 12px;
+  font-size: clamp(2.8rem, 5vw, 4.7rem);
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+}
+
+.subhead,
+.muted,
+label,
+.dice-result,
+.game-log,
+.player-list {
+  color: var(--muted);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid rgba(198, 186, 162, 0.75);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.hero-card .panel,
+.sidebar .panel,
+.board-panel {
+  padding: 20px;
+}
+
+form,
+.controls {
+  display: grid;
+  gap: 12px;
+}
+
+input,
+button {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  font: inherit;
+}
+
+input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+button {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 700;
+  color: white;
+  background: var(--ink);
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  background: #b4a48b;
+}
+
+button.accent {
+  background: var(--accent);
+}
+
+.actions,
+.share-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.join-fields {
+  display: grid;
+  gap: 10px;
+}
+
+.error {
+  min-height: 1.2em;
+  margin: 0;
+  color: var(--red);
+}
+
+.game {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 320px minmax(0, 1fr);
+}
+
+.sidebar {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.player-list,
+.game-log {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.player-list li,
+.game-log li {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(239, 229, 207, 0.7);
+}
+
+.player-chip {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.board-panel {
+  overflow: auto;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(52px, 1fr));
+  gap: 6px;
+}
+
+.cell {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  border: 1px solid rgba(109, 94, 70, 0.18);
+  padding: 8px;
+  overflow: hidden;
+  background: rgba(255, 250, 238, 0.95);
+}
+
+.cell:nth-child(4n) {
+  background: rgba(240, 194, 91, 0.22);
+}
+
+.cell:nth-child(5n) {
+  background: rgba(47, 122, 69, 0.12);
+}
+
+.cell-number {
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+.cell-jump {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.jump-up {
+  color: var(--green);
+}
+
+.jump-down {
+  color: var(--red);
+}
+
+.tokens {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.token {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .game {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell {
+    width: min(100vw - 20px, 1200px);
+    padding-top: 20px;
+  }
+}

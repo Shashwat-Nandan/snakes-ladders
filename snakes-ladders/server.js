@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const { URL } = require("url");
 
 const PORT = Number(process.env.PORT || 3000);
-const PUBLIC_DIR = path.join(__dirname, "public");
+const CLIENT_DIR = path.join(__dirname, "dist");
 const MAX_PLAYERS = 3;
 const POLL_TIMEOUT_MS = 25000;
 const ROOM_TTL_MS = 1000 * 60 * 60 * 6;
@@ -213,41 +213,57 @@ function movePlayer(room, player, roll) {
   }
 }
 
-function serveFile(req, res, pathname) {
-  const safePath = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
-  const filePath = path.join(PUBLIC_DIR, safePath);
+function sendStaticFile(res, filePath, content) {
+  const ext = path.extname(filePath);
+  const mimeType =
+    {
+      ".html": "text/html; charset=utf-8",
+      ".css": "text/css; charset=utf-8",
+      ".js": "application/javascript; charset=utf-8",
+      ".json": "application/json; charset=utf-8",
+      ".svg": "image/svg+xml",
+      ".png": "image/png",
+      ".ico": "image/x-icon",
+    }[ext] || "application/octet-stream";
 
-  if (!filePath.startsWith(PUBLIC_DIR)) {
+  res.writeHead(200, {
+    "Content-Type": mimeType,
+    "Cache-Control": ext === ".html" ? "no-store" : "public, max-age=31536000, immutable",
+  });
+  res.end(content);
+}
+
+function serveClient(req, res, pathname) {
+  const safePath = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+  const filePath = path.normalize(path.join(CLIENT_DIR, safePath));
+
+  if (!filePath.startsWith(CLIENT_DIR)) {
     json(res, 403, { error: "Forbidden" });
     return;
   }
 
   fs.readFile(filePath, (error, content) => {
-    if (error) {
-      json(res, 404, { error: "Not found" });
+    if (!error) {
+      sendStaticFile(res, filePath, content);
       return;
     }
 
-    const ext = path.extname(filePath);
-    const mimeType =
-      {
-        ".html": "text/html; charset=utf-8",
-        ".css": "text/css; charset=utf-8",
-        ".js": "application/javascript; charset=utf-8",
-        ".json": "application/json; charset=utf-8",
-      }[ext] || "application/octet-stream";
-
-    res.writeHead(200, {
-      "Content-Type": mimeType,
-      "Cache-Control": "no-store",
+    const indexPath = path.join(CLIENT_DIR, "index.html");
+    fs.readFile(indexPath, (indexError, indexContent) => {
+      if (indexError) {
+        json(res, 503, {
+          error: "Client build not found. Run `npm run build` before starting the server.",
+        });
+        return;
+      }
+      sendStaticFile(res, indexPath, indexContent);
     });
-    res.end(content);
   });
 }
 
-const server = http.createServer(async (req, res) => {
-  cleanupRooms();
+setInterval(cleanupRooms, 60_000);
 
+async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
 
@@ -347,12 +363,19 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    serveFile(req, res, pathname);
+    serveClient(req, res, pathname);
   } catch (error) {
     json(res, 400, { error: error.message || "Request failed" });
   }
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`Snakes and Ladders server listening on http://localhost:${PORT}`);
-});
+// Vercel serverless export
+module.exports = handler;
+
+// Local development: start HTTP server
+if (require.main === module) {
+  const server = http.createServer(handler);
+  server.listen(PORT, () => {
+    console.log(`Snakes and Ladders server listening on http://localhost:${PORT}`);
+  });
+}

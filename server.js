@@ -192,7 +192,7 @@ function movePlayer(room, player, roll) {
     return;
   }
 
-  if (SNAKES_AND_LADDERS[destination]) {
+  if (destination in SNAKES_AND_LADDERS) {
     const mapped = SNAKES_AND_LADDERS[destination];
     const isLadder = mapped > destination;
     addLog(

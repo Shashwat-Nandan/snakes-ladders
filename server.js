@@ -245,9 +245,9 @@ function serveFile(req, res, pathname) {
   });
 }
 
-const server = http.createServer(async (req, res) => {
-  cleanupRooms();
+setInterval(cleanupRooms, 60_000);
 
+const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
 

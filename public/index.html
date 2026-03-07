@@ -54,8 +54,17 @@
           <div class="panel controls">
             <p class="eyebrow">Turn</p>
             <h2 id="turn-label">Waiting...</h2>
-            <button id="roll-button" class="accent" disabled>Roll dice</button>
+            <div class="dice-area">
+              <span id="dice-display" class="dice-display hidden"></span>
+              <button id="roll-button" class="accent" disabled>Roll dice</button>
+            </div>
             <p id="roll-result" class="dice-result">Roll pending</p>
+          </div>
+
+          <div id="winner-banner" class="panel winner-banner hidden">
+            <p class="eyebrow">Winner</p>
+            <h2 id="winner-name"></h2>
+            <button id="play-again" class="accent">New game</button>
           </div>
 
           <div class="panel">

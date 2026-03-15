@@ -192,8 +192,8 @@ function Board({ gameState }) {
 function GameLog({ log }) {
   return (
     <div className="log-list">
-      {[...log].reverse().map((entry, index) => (
-        <div key={`${index}-${entry}`} className="log-entry">
+      {[...log].reverse().map((entry, reverseIndex) => (
+        <div key={log.length - 1 - reverseIndex} className="log-entry">
           {entry}
         </div>
       ))}

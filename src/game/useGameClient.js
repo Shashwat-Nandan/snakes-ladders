@@ -83,10 +83,17 @@ export function useGameClient() {
           pollStateRef.current.version = nextState.version;
           setGameState(nextState);
         } catch (error) {
-          if (!cancelled) {
-            setAuthError(error.message);
+          if (cancelled) {
+            return;
           }
-          return;
+          // TypeError means a network-level failure (no response) — retry after a short delay.
+          // Any other error is a server response error (room not found, expired, etc.) — stop polling.
+          if (error instanceof TypeError) {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+          } else {
+            setAuthError(error.message);
+            return;
+          }
         }
       }
     }

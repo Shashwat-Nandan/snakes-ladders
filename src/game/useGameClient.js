@@ -32,7 +32,12 @@ export function useGameClient() {
 
     async function boot() {
       try {
-        const nextState = await fetchState(session.roomId, session.playerSecret, 0);
+        const nextState = await fetchState(
+          session.roomId,
+          session.playerSecret,
+          0,
+          AbortSignal.timeout(10_000)
+        );
         if (cancelled) {
           return;
         }

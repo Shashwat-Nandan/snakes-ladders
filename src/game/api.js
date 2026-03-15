@@ -6,6 +6,7 @@ export async function api(path, options = {}) {
       ...(options.headers || {}),
     },
     body: options.body ? JSON.stringify(options.body) : undefined,
+    signal: options.signal,
   });
 
   const payload = await response.json();
@@ -29,9 +30,10 @@ export function joinRoom(name, roomId) {
   });
 }
 
-export function fetchState(roomId, playerSecret, version = 0) {
+export function fetchState(roomId, playerSecret, version = 0, signal) {
   return api(
-    `/api/state?roomId=${encodeURIComponent(roomId)}&playerSecret=${encodeURIComponent(playerSecret)}&version=${version}`
+    `/api/state?roomId=${encodeURIComponent(roomId)}&playerSecret=${encodeURIComponent(playerSecret)}&version=${version}`,
+    { signal }
   );
 }
 

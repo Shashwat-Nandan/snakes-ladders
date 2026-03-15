@@ -10,6 +10,39 @@ import {
 import { HomePage } from "./pages/HomePage";
 import "./styles.css";
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <main className="page-shell">
+          <section className="boot-panel panel">
+            <p className="section-label">Something went wrong</p>
+            <h1>An unexpected error occurred.</h1>
+            <p>{this.state.error.message}</p>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => window.location.reload()}
+            >
+              Reload
+            </button>
+          </section>
+        </main>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function RootLayout() {
   return <Outlet />;
 }
@@ -35,6 +68,8 @@ const router = createRouter({
 
 ReactDOM.createRoot(document.getElementById("app")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
   </React.StrictMode>
 );

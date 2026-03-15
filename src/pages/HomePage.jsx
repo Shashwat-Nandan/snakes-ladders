@@ -167,7 +167,7 @@ function Board({ gameState }) {
             {playersHere.length > 0 ? (
               <div className="board-tokens">
                 {playersHere.map((player) => {
-                  const index = playerIndex.get(player.id) || 0;
+                  const index = playerIndex.get(player.id) ?? 0;
                   return (
                     <span
                       key={player.id}
